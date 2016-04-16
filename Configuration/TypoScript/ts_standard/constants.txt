@@ -37,7 +37,7 @@ plugin.tx_cal_controller {
 	view.event.remind = 1
 
 	# cat=Calendar Base (General)/file/datetimeformats/1; type=options[October 22=%B %d, Oct 22=%b %d, 22 October=%d %B, 22 Oct=%d %b, 10/22=%m/%d, 22.10=%d.%m]; label=General date format
-	view.dateFormat = %B %d
+	view.dateFormat = %d %B
 	
 	# cat=Calendar Base (General)/file/datetimeformats/2; type=options[08:37 pm=%I:%M %p, 20:37=%H:%M]; label=General time format
 	view.timeFormat = %I:%M %p

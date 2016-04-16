@@ -446,6 +446,8 @@
 			<label index="l_calendar_subscription">Manage calendar subscription</label>
 			<label index="l_color">Color</label>
 			<label index="l_public_calendar">Public calendar</label>
+
+            <label index="list_title">Next events</label>
 		</languageKey>
 		<languageKey index="dk" type="array">
 			<label index="l_day">Dag</label>
@@ -1487,6 +1489,8 @@
 			<label index="l_organizer_email">Email</label>
 			<label index="l_organizer_link">Link</label>
 			<label index="l_organizer_image">Immagine</label>
+
+            <label index="list_title">Prossimi eventi</label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="l_day">Journée</label>
@@ -4743,6 +4747,7 @@
 			<label index="l_repeats">Repeats</label>
 			<label index="l_until">Until</label>
 			<label index="l_interval">Repeat every</label>
+
 		</languageKey>
 	</orig_text>
 </T3locallang>

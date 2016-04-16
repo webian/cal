@@ -85,12 +85,12 @@ plugin.tx_cal_controller {
 		# @description	Info text if there is no function nor service to handle a desired view
 		noViewFoundHelpText = Controller function not found: 
 
-        # @description	Categories can be preselected. Enter a single ID or a comma separated list
+		# @description	Categories can be preselected. Enter a single ID or a comma separated list
 		category = 
 		
 		# @description	Calendars can be preselected. Enter a single ID or a comma separated list
 		calendar =
-        
+
 		# @description	Relative path (from TYPO3 site root) that images should be loaded from.
 		# @also					Constants
 		imagePath = {$plugin.tx_cal_controller.view.imagePath}
@@ -332,7 +332,7 @@ plugin.tx_cal_controller {
 				title = TEXT
 				title {
 					current = 1
-					dataWrap = <div>%%%TITLE_LABEL%%%:&nbsp; |</div>
+					dataWrap = |
 				}
 	
 				# @description	Content object for the event title of allDay Events
@@ -342,7 +342,7 @@ plugin.tx_cal_controller {
 				startdate = TEXT
 				startdate  {
 					current = 1
-					dataWrap = <div>%%%STARTDATE_LABEL%%%:&nbsp; |</div>
+					dataWrap = |
 				}
 
 				# @description	Content object for the event end date
@@ -351,7 +351,7 @@ plugin.tx_cal_controller {
 					current = 1
 					noTrimWrap = | - ||
 					required = 1
-					dataWrap = <div>%%%ENDDATE_LABEL%%%:&nbsp; |</div>
+					dataWrap = |
 				}
 
 				# @description	Content object for the event start time
@@ -435,47 +435,28 @@ plugin.tx_cal_controller {
 				}
 	
 				# @description	Content object for event description
-				description =< tt_content.text.20
+				description = TEXT
 				description {
-					field = description
+					current = 1
 					required = 1
-					dataWrap = <div>%%%DESCRIPTION_LABEL%%%:&nbsp; |</div>
+					parseFunc = < lib.parseFunc_RTE
+					dataWrap = |
 				}
-				
+
 				# @description	Content object for event image
-				image =< tt_content.image.20
+				image >
+				image =< tt_content.image
 				image {
-					preRenderRegisters.allImageCaptions.cObject {
-			            references {
-				        	table = tx_cal_event
-				            uid.data = uid
-				            fieldName = image
-				        }
-				        renderObj.data = title
-				    }
-				    
-				    imgList.cObject.references < plugin.tx_cal_controller.view.event.event.image.preRenderRegisters.allImageCaptions.cObject.references
-						
-					//17 = in text right
-					textPos.override = 17
-					layout.key.override = 17
-					1 {
-						imageLinkWrap {
-							# We just need a value > 0, which could be pid or uid ;)
-							enable.field = uid
-							typolink.ATagParams.dataWrap = class="{$styles.content.imgtext.linkWrap.lightboxCssClass}" rel="{$styles.content.imgtext.linkWrap.lightboxRelAttribute}"
+					dataProcessing {
+						10 {
+							references {
+								table = tx_cal_event
+								fieldName = image
+							}
 						}
 					}
-					
-					imgMax = 4
-
-					stdWrap.required = 1
-					stdWrap.dataWrap = <div>%%%IMAGE_LABEL%%%:&nbsp; |</div>
-					
-					maxW = {$plugin.tx_cal_controller.singleMaxW}
-					
 				}
-	
+
 				# @description_image	Content object for rendering the description and the images with the regular 'text with image' (TEXTPIC) cObject
 				description_image < .image
 				description_image {
@@ -522,19 +503,19 @@ plugin.tx_cal_controller {
 					key.current = 1
 					day = TEXT
 					day {
-						value = <img src="###IMG_PATH###/clock-small.png" title="%%%DAILY%%%" class="freq"/>
+						value =
 					}
 					week = TEXT
 					week {
-						value = <img src="###IMG_PATH###/clock-small.png" title="%%%WEEKLY%%%" class="freq"/>
+						value =
 					}
 					month = TEXT
 					month {
-						value = <img src="###IMG_PATH###/clock-small.png" title="%%%MONTHLY%%%" class="freq"/>
+						value =
 					}
 					year = TEXT
 					year {
-						value = <img src="###IMG_PATH###/clock-small.png" title="%%%YEARLY%%%" class="freq"/>
+						value =
 					}
 				}
 	
@@ -737,11 +718,11 @@ plugin.tx_cal_controller {
 				timeFormat = {$plugin.tx_cal_controller.view.timeFormat}
 				
 				# @description Add the (configurable) details of the currently logged in user for the notification-mail.
-	 			# The detailed info of the currently logged in user is retrieved from the template (notifyOnCreate.tmpl, notifyOnChange.tmpl or notifyOnDelete.tmpl)
-	 			# with the tag ###CURRENT_USER###. The structure of the info is given between ###CURRENT_USER_SUBPART###. Every field of the 'fe_users' record can
-	 			# be used by converting the field-name to uppercase and putting it between '###', e.g. first_name --> ###FIRST_NAME###.
-	 			# The fields can be wrapped by specifying tx_cal_controller.view.event.notify.currentUser.<field-name>_stdWrap { dataWrap = ... }, e.g.
-	 			# tx_cal_controller.view.event.notify.currentUser.first_name_stdWrap { dataWrap = Firstname: | }
+				# The detailed info of the currently logged in user is retrieved from the template (notifyOnCreate.tmpl, notifyOnChange.tmpl or notifyOnDelete.tmpl)
+				# with the tag ###CURRENT_USER###. The structure of the info is given between ###CURRENT_USER_SUBPART###. Every field of the 'fe_users' record can
+				# be used by converting the field-name to uppercase and putting it between '###', e.g. first_name --> ###FIRST_NAME###.
+				# The fields can be wrapped by specifying tx_cal_controller.view.event.notify.currentUser.<field-name>_stdWrap { dataWrap = ... }, e.g.
+				# tx_cal_controller.view.event.notify.currentUser.first_name_stdWrap { dataWrap = Firstname: | }
 				currentUser =
 			}
 			
@@ -1071,23 +1052,23 @@ plugin.tx_cal_controller {
 					typolink.parameter.current = 1
 					required = 1
 					dataWrap = <div>%%%EMAIL_LABEL%%%:&nbsp; |</div>
-			    }
-			    
-			    # @description	Content object for location link
-			    link < .email
-			    link {
-			    	dataWrap = <div>%%%LINK_LABEL%%%:&nbsp; |</div>
-			    }
-			    
-			    # @description	Content object for location image
+				}
+
+				# @description	Content object for location link
+				link < .email
+				link {
+					dataWrap = <div>%%%LINK_LABEL%%%:&nbsp; |</div>
+				}
+
+				# @description	Content object for location image
 				image =< plugin.tx_cal_controller.view.event.event.image
 				image {
 					preRenderRegisters.allImageCaptions.cObject {
-			            references {
-				        	table = tx_cal_location
-				        }
-				    }
-				    imgList.cObject.references < plugin.tx_cal_controller.view.location.location.image.preRenderRegisters.allImageCaptions.cObject.references
+						references {
+							table = tx_cal_location
+						}
+					}
+					imgList.cObject.references < plugin.tx_cal_controller.view.location.location.image.preRenderRegisters.allImageCaptions.cObject.references
 				}
 	
 				# @description	Displays location related events
@@ -1215,11 +1196,11 @@ plugin.tx_cal_controller {
 				
 				image {
 					preRenderRegisters.allImageCaptions.cObject {
-			            references {
-				        	table = tx_cal_organizer
-				        }
-				    }
-				    imgList.cObject.references < plugin.tx_cal_controller.view.organizer.organizer.image.preRenderRegisters.allImageCaptions.cObject.references
+						references {
+							table = tx_cal_organizer
+						}
+					}
+					imgList.cObject.references < plugin.tx_cal_controller.view.organizer.organizer.image.preRenderRegisters.allImageCaptions.cObject.references
 				}
 
 				addLink {
@@ -1763,16 +1744,16 @@ plugin.tx_cal_controller {
 
 			# @description	Date format for weeks within week view.
 			dateFormatWeekList = %a<br/>%d/%m
-            
+
 			# @description	Date format for week show at the top of view.
 			dateFormatWeek = {$plugin.tx_cal_controller.view.dateFormat}
-            
+
 			# @description	Time format for hours shown within the week view.
 			timeFormatWeek = %h%p
-            
+
 			# @description	Arrow image within the legend for going back to the previous day.
-            legendPrevDayLink = <img src="###IMG_PATH###/control.png" alt="%%%PREV%%%" class="nextweek_arrow" />
-            
+			legendPrevDayLink = <img src="###IMG_PATH###/control.png" alt="%%%PREV%%%" class="nextweek_arrow" />
+
 			# @description	Arrow image within the legend for going forward to the next day.
 			legendNextDayLink = <img src="###IMG_PATH###/control-180.png" alt="%%%NEXT%%%" class="previousweek_arrow" />
 
@@ -1898,25 +1879,25 @@ plugin.tx_cal_controller {
 			useListEventRenderSettingsView = list
 
 			# @description	Date format for month shown at top of view.
-            dateFormatMonth = %B %Y
-            
-            # @description	Date format for weekdays in small month.
-            weekdayFormatSmallMonth = %a
-            
-            # @description	Max length of weekdays names in small month. 0 = full length
-            weekdayLengthSmallMonth = 2
-            
-            # @description	Date format for weekdays in medium (year) month.
-            weekdayFormatMediumMonth = %a
-            
-            # @description	Max length of weekdays names in medium (year) month. 0 = full length
-            weekdayLengthMediumMonth = 0
-            
-            # @description	Date format for weekdays in large month.
-            weekdayFormatLargeMonth = %a
-            
-            # @description	Max length of weekdays names in large month. 0 = full length
-            weekdayLengthLargeMonth = 0
+			dateFormatMonth = %B %Y
+
+			# @description	Date format for weekdays in small month.
+			weekdayFormatSmallMonth = %a
+
+			# @description	Max length of weekdays names in small month. 0 = full length
+			weekdayLengthSmallMonth = 2
+
+			# @description	Date format for weekdays in medium (year) month.
+			weekdayFormatMediumMonth = %a
+
+			# @description	Max length of weekdays names in medium (year) month. 0 = full length
+			weekdayLengthMediumMonth = 0
+
+			# @description	Date format for weekdays in large month.
+			weekdayFormatLargeMonth = %a
+
+			# @description	Max length of weekdays names in large month. 0 = full length
+			weekdayLengthLargeMonth = 0
 
 			# @description	Wrap for all day events and standard events in small month view.
 			smallLink_stdWrap {
@@ -2087,10 +2068,10 @@ plugin.tx_cal_controller {
 			
 			
 			# @description	Date format for weekdays in medium (year) month.
-            weekdayFormatMediumMonth = %a
-            
-            # @description	Max length of weekdays names in medium (year) month. 0 = full length
-            weekdayLengthMediumMonth = 2
+			weekdayFormatMediumMonth = %a
+
+			# @description	Max length of weekdays names in medium (year) month. 0 = full length
+			weekdayLengthMediumMonth = 2
 
 			# @description	Corrects the starting point to search for events. If the year ends on a monday and you want to have the rest of the weekdays filled
 			#				60*60*24*6
@@ -2116,7 +2097,7 @@ plugin.tx_cal_controller {
 			}
 
 			# @description	Date format for month shown at top of each month.
-            dateFormatMonth = %B
+			dateFormatMonth = %B
 			
 			# @description	Configuration for the today link.
 			today = TEXT
@@ -2225,30 +2206,22 @@ plugin.tx_cal_controller {
 			found_stdWrap {
 				noTrimWrap = |<p class="found">| %%%SEARCH_FOUND%%%</p>|
 		   }
-		    
+
 			# @description	Formats the list title
 			heading = COA
 			heading {
 				1 = TEXT
 				1 {
-					data = register:cal_list_starttime
-					strftime = {$plugin.tx_cal_controller.view.dateFormat}
-				}
-				2 = TEXT
-				2 {
-					data = register:cal_list_endtime
-					wrap = &nbsp;-&nbsp;|
-					required = 1
-					strftime = {$plugin.tx_cal_controller.view.dateFormat}
+					data = LLL:EXT:cal/Resources/Private/Language/locallang.xml:list_title
 				}
 			}
 
 			# @description	Enables separation of different days in the list view
 			enableDayWrapper = 0
-            
+
 			# @description	Format for the day wrapper
 			dayWrapperFormat = %d. %B
-            
+
 			# @description	Wraps each day containing events
 			dayWrapper = COA
 			dayWrapper {
@@ -2461,7 +2434,7 @@ plugin.tx_cal_controller {
 					activeLinkWrap = <strong>|</strong>			    
 				}
 			}
-            
+
 			# Configuration of the event object
 			event < plugin.tx_cal_controller.view.event.event
 			event {
@@ -2973,10 +2946,10 @@ plugin.tx_cal_controller {
 			# @description	Fields to search within a group.
 			searchGroupFieldList = title
 			 
-            # @description	Start Range for search.
+			# @description	Start Range for search.
 			startRange = 19700102
-            
-            # @description	End Range for Search.
+
+			# @description	End Range for Search.
 			endRange = 20300101
 			
 			# @description	The search link url

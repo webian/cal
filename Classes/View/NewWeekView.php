@@ -382,13 +382,6 @@ class NewWeekView extends \TYPO3\CMS\Cal\View\NewTimeView {
 			}
 			$this->content .= '</tr>';
 		}
-		$this->content .= '<tr class="create">';
-		for ($i = 0; $i < 7; $i ++) {
-			$this->days [$daysKeys [$i]]->getCreateEventLinkMarker ($template, $sims, $rems, $wrapped, $conf ['view']);
-			$this->content .= '<td>' . $sims ['###CREATE_EVENT_LINK###'] . '</td>';
-		}
-		$this->content .= '</tr>';
-		$this->rowspan ++;
 	}
 	public function getWeekClassesMarker(& $template, & $sims, & $rems, & $wrapped, $view) {
 		$sims ['###WEEK_CLASSES###'] = $this->getWeekClasses ();

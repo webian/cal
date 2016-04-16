@@ -40,67 +40,76 @@ value = HelloWorld<br/>
 
 <!--###TEMPLATE_PHPICALENDAR_EVENT### begin -->
 <!--phpicalendar_event.tmpl-->
-<h1>###HEADING###</h1>
+<h1>###TITLE###</h1>
 ###EDIT_LINK###
 
-###TITLE###
-###STARTDATE###
-###ENDDATE###
-###STARTTIME###
-###ENDTIME###
-###STATUS### ###PRIORITY### ###COMPLETED###
-###ORGANIZER###
-###LOCATION###
-###DESCRIPTION###
-###EXT_URL###
-###IMAGE###
-###ATTACHMENT###
-###ATTENDEE###
-<!-- ###ICS_LINK### start --><img src="###IMG_PATH###/ics.gif" border="0"/><!-- ###ICS_LINK### end -->
-###MORE_LINK###
+<div id="c63" class="frame default ">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="dtstart-container">
+				<span class="glyphicon glyphicon-time"></span>
+				###STARTDATE######ENDDATE###
+				<em>###STARTTIME###</em>
+				<em>###ENDTIME###</em>
+			</div>
+			###STATUS### ###PRIORITY### ###COMPLETED###
+			###ORGANIZER###
+			###LOCATION###
+			###DESCRIPTION###
+			###EXT_URL###
+			###ATTACHMENT###
+			###ATTENDEE###
+			<!-- ###ICS_LINK### start --><img src="###IMG_PATH###/ics.gif" border="0"/><!-- ###ICS_LINK### end -->
+			###MORE_LINK###
 
-<!-- ###SUBSCRIPTION### start -->
-<div id="monitor_event">
-<!--###NOTLOGGEDIN### start-->
-If you are logged in, you can set up monitoring for this event.
-<!--###NOTLOGGEDIN### end-->
-<!--###NOTLOGGEDIN_NOMONITORING### start-->
-<h1>###NOTLOGGEDIN_NOMONITORING_HEADING###</h1>
-###L_CAPTCHA_START_SUCCESS###
-<form name="tx_cal_controller" id="tx_cal_controller_subscribe" method="post" action="###ACTIONURL###">
-###L_ENTER_EMAIL###
-<input type="text" size=30 name="tx_cal_controller[email]" value=""><br /><br />
-###L_CAPTCHA_TEXT###<br />
-###CAPTCHA_TEXT###&nbsp;&nbsp;&nbsp;
-###CAPTCHA_SRC###<br />
-<input type="submit" value="###NOTLOGGEDIN_NOMONITORING_SUBMIT###" />
-</form>
-<!--###NOTLOGGEDIN_NOMONITORING### end-->
-<!--###NOTLOGGEDIN_MONITORING### start-->
-<h1>###NOTLOGGEDIN_MONITORING_HEADING###</h1>
-###L_CAPTCHA_STOP_SUCCESS###
-<form name="tx_cal_controller" id="tx_cal_controller_unsubscribe" method="post" action="###ACTIONURL###">
-###L_ENTER_EMAIL###
-<input type="text" size=30 name="tx_cal_controller[email]" value=""><br /><br />
-###L_CAPTCHA_TEXT###<br />
-###CAPTCHA_TEXT###&nbsp;&nbsp;&nbsp;
-###CAPTCHA_SRC###<br />
-<input type="submit" value="###NOTLOGGEDIN_MONITORING_SUBMIT###" />
-</form>
-<!--###NOTLOGGEDIN_MONITORING### end-->
-<!--###LOGGEDIN_NOMONITORING###-->
-<form>
-Do you want to be notified, on event changes? <input type="hidden" id="userid" value="1"/> <input type="submit" value="monitor" />
-</form>
-<!--###LOGGEDIN_NOMONITORING###-->
-<!--###LOGGEDIN_MONITORING###-->
-<form>
-Stop monitoring this event? <input type="hidden" id="userid" value="1"/> <input type="submit" value="Stop monitoring" />
-</form>
-<!--###LOGGEDIN_MONITORING###-->
+			<!-- ###SUBSCRIPTION### start -->
+			<div id="monitor_event">
+			<!--###NOTLOGGEDIN### start-->
+			If you are logged in, you can set up monitoring for this event.
+			<!--###NOTLOGGEDIN### end-->
+			<!--###NOTLOGGEDIN_NOMONITORING### start-->
+			<h1>###NOTLOGGEDIN_NOMONITORING_HEADING###</h1>
+			###L_CAPTCHA_START_SUCCESS###
+			<form name="tx_cal_controller" id="tx_cal_controller_subscribe" method="post" action="###ACTIONURL###">
+			###L_ENTER_EMAIL###
+			<input type="text" size=30 name="tx_cal_controller[email]" value=""><br /><br />
+			###L_CAPTCHA_TEXT###<br />
+			###CAPTCHA_TEXT###&nbsp;&nbsp;&nbsp;
+			###CAPTCHA_SRC###<br />
+			<input type="submit" value="###NOTLOGGEDIN_NOMONITORING_SUBMIT###" />
+			</form>
+			<!--###NOTLOGGEDIN_NOMONITORING### end-->
+			<!--###NOTLOGGEDIN_MONITORING### start-->
+			<h1>###NOTLOGGEDIN_MONITORING_HEADING###</h1>
+			###L_CAPTCHA_STOP_SUCCESS###
+			<form name="tx_cal_controller" id="tx_cal_controller_unsubscribe" method="post" action="###ACTIONURL###">
+			###L_ENTER_EMAIL###
+			<input type="text" size=30 name="tx_cal_controller[email]" value=""><br /><br />
+			###L_CAPTCHA_TEXT###<br />
+			###CAPTCHA_TEXT###&nbsp;&nbsp;&nbsp;
+			###CAPTCHA_SRC###<br />
+			<input type="submit" value="###NOTLOGGEDIN_MONITORING_SUBMIT###" />
+			</form>
+			<!--###NOTLOGGEDIN_MONITORING### end-->
+			<!--###LOGGEDIN_NOMONITORING###-->
+			<form>
+			Do you want to be notified, on event changes? <input type="hidden" id="userid" value="1"/> <input type="submit" value="monitor" />
+			</form>
+			<!--###LOGGEDIN_NOMONITORING###-->
+			<!--###LOGGEDIN_MONITORING###-->
+			<form>
+			Stop monitoring this event? <input type="hidden" id="userid" value="1"/> <input type="submit" value="Stop monitoring" />
+			</form>
+			<!--###LOGGEDIN_MONITORING###-->
 
+			</div>
+			<!-- ###SUBSCRIPTION### end -->
+		</div>
+		<div class="col-md-6">
+			###IMAGE###
+		</div>
+	</div>
 </div>
-<!-- ###SUBSCRIPTION### end -->
 
 <!--/phpicalendar_event.tmpl-->
 <!--###TEMPLATE_PHPICALENDAR_EVENT### end -->
@@ -130,33 +139,33 @@ Stop monitoring this event? <input type="hidden" id="userid" value="1"/> <input 
 <!--###TEMPLATE_PHPICALENDAR_EVENT_DAY### begin -->
 				<div style="top: ###TOP###px; left: ***LEFT***%; width: ***WIDTH***%;" class="vevent ###HEADERSTYLE###">
 				  <!-- ###EVENT_LINK### start -->
-	                  <dl style="height: ###LENGTH###px;">
-	                    <span class="popup">
-	                    	<span title="###MICROFORMAT_START###" class="dtstart"></span>
-	                    </span>
-	                    <dd>
-	                      <span class="summary">###TITLE###</span>
-	                      ###LOCATION###
-	                    </dd>
-	                  </dl>
-	                <!-- ###EVENT_LINK### end -->
-                </div>
+					  <dl style="height: ###LENGTH###px;">
+						<span class="popup">
+							<span title="###MICROFORMAT_START###" class="dtstart"></span>
+						</span>
+						<dd>
+						  <span class="summary">###TITLE###</span>
+						  ###LOCATION###
+						</dd>
+					  </dl>
+					<!-- ###EVENT_LINK### end -->
+				</div>
 <!--###TEMPLATE_PHPICALENDAR_EVENT_DAY### end -->
 
 <!--###TEMPLATE_PHPICALENDAR_EVENT_WEEK### begin -->
-                <div style="top: ###TOP###px; left: ***LEFT***%; width: ***WIDTH***%;" class="vevent ###HEADERSTYLE###">
-                <!-- ###EVENT_LINK### start -->
-                  <dl style="height: ###LENGTH###px;">
-	                  <span class="popup">
-    	                <span title="###MICROFORMAT_START###" class="dtstart"></span>
-    	              </span>
-                    <dd>
-                      <span class="summary">###TITLE###</span>
+				<div style="top: ###TOP###px; left: ***LEFT***%; width: ***WIDTH***%;" class="vevent ###HEADERSTYLE###">
+				<!-- ###EVENT_LINK### start -->
+				  <dl style="height: ###LENGTH###px;">
+					  <span class="popup">
+						<span title="###MICROFORMAT_START###" class="dtstart"></span>
+					  </span>
+					<dd>
+					  <span class="summary">###TITLE###</span>
 					  ###LOCATION###
-                    </dd>
-                  </dl>
-                  <!-- ###EVENT_LINK### end -->
-                </div>
+					</dd>
+				  </dl>
+				  <!-- ###EVENT_LINK### end -->
+				</div>
 <!--###TEMPLATE_PHPICALENDAR_EVENT_WEEK### end -->
 
 
@@ -245,26 +254,26 @@ Stop monitoring this event? <input type="hidden" id="userid" value="1"/> <input 
 
 <!-- ###TEMPLATE_PHPICALENDAR_EVENT_LIST_ODD### start -->
 	<dt class="vevent">
-		<div class="dtstart-container"><abbr title="###MICROFORMAT_START###" class="dtstart">###STARTDATE### ###STARTTIME###</abbr></div>
+		<div class="dtstart-container">###STARTDATE### ###STARTTIME###</div>
 		<div class="summary"><!-- ###EVENT_LINK### start-->###TITLE###<!-- ###EVENT_LINK### end--></div>
 	</dt>
 <!-- ###TEMPLATE_PHPICALENDAR_EVENT_LIST_ODD### end -->
 <!-- ###TEMPLATE_PHPICALENDAR_EVENT_LIST_EVEN### start -->
 	<dt class="vevent even">
-		<div class="dtstart-container"><abbr title="###MICROFORMAT_START###" class="dtstart">###STARTDATE### ###STARTTIME###</abbr></div>
+		<div class="dtstart-container">###STARTDATE### ###STARTTIME###</div>
 		<div class="summary"><!-- ###EVENT_LINK### start-->###TITLE###<!-- ###EVENT_LINK### end--></div>
 	</dt>
 <!-- ###TEMPLATE_PHPICALENDAR_EVENT_LIST_EVEN### end -->
 
 <!-- ###TEMPLATE_PHPICALENDAR_EVENT_LIST_ODD_ALLDAY### start -->
 	<dt class="vevent">
-		<div class="dtstart-container"><abbr title="###MICROFORMAT_START###" class="dtstart">###STARTDATE###</abbr></div>
+        <div class="dtstart-container"><span class="glyphicon glyphicon-time"></span>###STARTDATE###</div>
 		<div class="summary"><!-- ###EVENT_LINK### start-->###TITLE###<!-- ###EVENT_LINK### end--></div>
 	</dt>
 <!-- ###TEMPLATE_PHPICALENDAR_EVENT_LIST_ODD_ALLDAY### end -->
 <!-- ###TEMPLATE_PHPICALENDAR_EVENT_LIST_EVEN_ALLDAY### start -->
 	<dt class="vevent even">
-		<div class="dtstart-container"><abbr title="###MICROFORMAT_START###" class="dtstart">###STARTDATE###</abbr></div>
+        <div class="dtstart-container"><span class="glyphicon glyphicon-time"></span>###STARTDATE###</div>
 		<div class="summary"><!-- ###EVENT_LINK### start-->###TITLE###<!-- ###EVENT_LINK### end--></div>
 	</dt>
 <!-- ###TEMPLATE_PHPICALENDAR_EVENT_LIST_EVEN_ALLDAY### end -->
@@ -461,24 +470,24 @@ Free And Busy views:
 
 <!--###TEMPLATE_PHPICALENDAR_EVENT_DAY_FNB### begin -->
 				<div style="top: ###TOP###px; left: ***LEFT***%; width: ***WIDTH***%;" class="vevent ###HEADERSTYLE###">
-	                  <dl style="height: ###LENGTH###px;">
-	                    <dt title="###MICROFORMAT_START###" class="dtstart">###STARTTIME###-###ENDTIME###</dt>
-	                    <dd>
-	                      <span class="summary" title="###CALENDAR_TITLE###">###CALENDAR_TITLE###</span>
-	                    </dd>
-	                  </dl>
-                </div>
+					  <dl style="height: ###LENGTH###px;">
+						<dt title="###MICROFORMAT_START###" class="dtstart">###STARTTIME###-###ENDTIME###</dt>
+						<dd>
+						  <span class="summary" title="###CALENDAR_TITLE###">###CALENDAR_TITLE###</span>
+						</dd>
+					  </dl>
+				</div>
 <!--###TEMPLATE_PHPICALENDAR_EVENT_DAY_FNB### end -->
 
 <!--###TEMPLATE_PHPICALENDAR_EVENT_WEEK_FNB### begin -->
-                <div style="top: ###TOP###px; left: ***LEFT***%; width: ***WIDTH***%;" class="vevent ###HEADERSTYLE###">
-                  <dl style="height: ###LENGTH###px;">
-                    <dt title="###MICROFORMAT_START###" class="dtstart">###STARTTIME###-###ENDTIME###</dt>
-                    <dd>
-                      <span class="summary" title="###CALENDAR_TITLE###">###CALENDAR_TITLE###</span>
-                    </dd>
-                  </dl>
-                </div>
+				<div style="top: ###TOP###px; left: ***LEFT***%; width: ***WIDTH***%;" class="vevent ###HEADERSTYLE###">
+				  <dl style="height: ###LENGTH###px;">
+					<dt title="###MICROFORMAT_START###" class="dtstart">###STARTTIME###-###ENDTIME###</dt>
+					<dd>
+					  <span class="summary" title="###CALENDAR_TITLE###">###CALENDAR_TITLE###</span>
+					</dd>
+				  </dl>
+				</div>
 <!--###TEMPLATE_PHPICALENDAR_EVENT_WEEK_FNB### end -->
 
 
