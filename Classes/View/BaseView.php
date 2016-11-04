@@ -641,13 +641,24 @@ class BaseView extends \TYPO3\CMS\Cal\Service\BaseService {
 		$nextmonthlinktext = $this->cObj->getSubpart($page, '###NEXT_MONTHLINKTEXT###');
 		$this->local_cObj->setCurrentVal($nextmonthlinktext);
 		$this->controller->getParametersForTyposcriptLink($this->local_cObj->data, array ('getdate' => $next_month, 'view' => $this->conf['view.']['monthLinkTarget'], $this->pointerName => NULL), $this->conf['cache'], $this->conf['clear_anyway'], $monthViewPid);
-		$rems['###NEXT_MONTHLINK###'] = $this->local_cObj->cObjGetSingle($this->conf['view.']['month.']['nextMonthLink'],$this->conf['view.']['month.']['nextMonthLink.']);
+		// !ian: month view: don't go forward more than 1 year
+		if ($this->local_cObj->data['link_timestamp'] < strtotime('+1 years', time())) {
+			$rems['###NEXT_MONTHLINK###'] = $this->local_cObj->cObjGetSingle($this->conf['view.']['month.']['nextMonthLink'],$this->conf['view.']['month.']['nextMonthLink.']);
+		} else {
+			$rems['###NEXT_MONTHLINK###'] = '';
+		}
+
 
 		// prev month
 		$prevmonthlinktext = $this->cObj->getSubpart($page, '###PREV_MONTHLINKTEXT###');
 		$this->local_cObj->setCurrentVal($prevmonthlinktext);
 		$this->controller->getParametersForTyposcriptLink($this->local_cObj->data, array ('getdate' => $prev_month, 'view' => $this->conf['view.']['monthLinkTarget'], $this->pointerName => NULL), $this->conf['cache'], $this->conf['clear_anyway'], $monthViewPid);
-		$rems['###PREV_MONTHLINK###'] = $this->local_cObj->cObjGetSingle($this->conf['view.']['month.']['prevMonthLink'],$this->conf['view.']['month.']['prevMonthLink.']);		
+		// !ian: month view: don't go back more than 1 year
+		if ($this->local_cObj->data['link_timestamp'] > strtotime('-1 years', time())) {
+			$rems['###PREV_MONTHLINK###'] = $this->local_cObj->cObjGetSingle($this->conf['view.']['month.']['prevMonthLink'],$this->conf['view.']['month.']['prevMonthLink.']);
+		} else {
+			$rems['###PREV_MONTHLINK###'] = '';
+		}
 
 
 		// next year
