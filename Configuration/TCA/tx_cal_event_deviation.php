@@ -97,7 +97,7 @@ $tx_cal_event_deviation = array(
 						'config' => array(
 								'type' => 'input',
 								'size' => '12',
-								'max' => '20',
+								'max' => '25',
 								'eval' => 'required,date'
 						)
 				),
@@ -117,7 +117,7 @@ $tx_cal_event_deviation = array(
 						'config' => array(
 								'type' => 'input',
 								'size' => '12',
-								'max' => '20',
+								'max' => '25',
 								'eval' => 'date'
 						)
 				),
@@ -147,7 +147,7 @@ $tx_cal_event_deviation = array(
 						'config' => array(
 								'type' => 'input',
 								'size' => '12',
-								'max' => '20',
+								'max' => '25',
 								'eval' => 'date'
 						)
 				),
@@ -510,7 +510,7 @@ $tx_cal_event_deviation = array(
 						'canNotCollapse' => 1
 				),
 				'5' => array(
-						'showitem' => 'start_date,start_time,allday',
+						'showitem' => 'allday,--linebreak--,start_date,start_time',
 						'canNotCollapse' => 1
 				),
 				'6' => array(
@@ -519,5 +519,13 @@ $tx_cal_event_deviation = array(
 				)
 		)
 );
+
+if(\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger (TYPO3_version) > 8000000){
+	$tx_cal_event_deviation['columns']['attachment']['config'] = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig('attachment', [
+			'appearance' => [
+					'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:media.addFileReference'
+			],
+	]);
+}
 
 return $tx_cal_event_deviation;

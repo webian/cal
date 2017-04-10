@@ -504,7 +504,11 @@ class Functions {
 		$hookObjectsArr = array ();
 		if (is_array ($GLOBALS ['TYPO3_CONF_VARS'] [TYPO3_MODE] ['EXTCONF'] ['ext/cal/' . $modulePath . '/class.' . $className . '.php'] [$hookName])) {
 			foreach ($GLOBALS ['TYPO3_CONF_VARS'] [TYPO3_MODE] ['EXTCONF'] ['ext/cal/' . $modulePath . '/class.' . $className . '.php'] [$hookName] as $classRef) {
-				$hookObjectsArr [] = GeneralUtility::getUserObj ($classRef);
+			    if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger (TYPO3_version) >= 8000000) {
+				    $hookObjectsArr [] = GeneralUtility::makeInstance ($classRef);
+			    } else {
+			        $hookObjectsArr [] = GeneralUtility::getUserObj ($classRef);
+			    }
 			}
 		}
 		
@@ -621,6 +625,24 @@ class Functions {
 		/** @var TypoScriptService $typoScriptService */
 		$typoScriptService = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Service\\TypoScriptService');
 		return $typoScriptService->convertTypoScriptArrayToPlainArray ($conf);
+	}
+	
+	public static function getContent($path) {
+		if(Functions::beginsWith($path,'/')){
+			$absPath = $path;
+		} else {
+			$absPath = $GLOBALS['TSFE']->tmpl->getFileName($path);
+		}
+		return file_get_contents ($absPath);
+	}
+	
+	/**
+	 * 
+	 * @param array $conf
+	 * @param array $eventArray
+	 */
+	public static function getIcsUid($conf, $eventArray){
+		return $conf ['view.'] ['ics.'] ['eventUidPrefix'] . '_' . $eventArray ['calendar_id'] . '_' . $eventArray ['uid'];
 	}
 }
 ?>

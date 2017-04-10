@@ -104,7 +104,6 @@ $tx_cal_calendar = array(
 			),
 			'nearby' => array(
 					'label' => 'LLL:EXT:cal/Resources/Private/Language/locallang_db.xml:tx_cal_calendar.nearby',
-					'displayCond' => 'EXT:wec_map:LOADED:true',
 					'config' => array(
 							'type' => 'check'
 					)
@@ -135,7 +134,6 @@ $tx_cal_calendar = array(
 			),
 			
 			'ext_url' => array(
-					'l10n_mode' => 'mergeIfNotBlank',
 					'label' => 'LLL:EXT:cal/Resources/Private/Language/locallang_db.xml:tx_cal_calendar.ext_url',
 					'config' => array(
 							'type' => 'user',
@@ -144,7 +142,6 @@ $tx_cal_calendar = array(
 			),
 			
 			'ext_url_notes' => array(
-					'l10n_mode' => 'mergeIfNotBlank',
 					'label' => 'LLL:EXT:cal/Resources/Private/Language/locallang_db.xml:tx_cal_calendar.ext_url_notes',
 					'config' => array(
 							'type' => 'text'
@@ -153,7 +150,6 @@ $tx_cal_calendar = array(
 			
 			'ics_file' => array(
 					'exclude' => 1,
-					'l10n_mode' => 'exclude',
 					'label' => 'LLL:EXT:cal/Resources/Private/Language/locallang_db.xml:tx_cal_calendar.ics_file',
 					'config' => array(
 							'type' => 'group',
@@ -171,9 +167,7 @@ $tx_cal_calendar = array(
 			
 			'refresh' => array(
 					'exclude' => 1,
-					'l10n_mode' => 'exclude',
 					'label' => 'LLL:EXT:cal/Resources/Private/Language/locallang_db.xml:tx_cal_calendar.refresh',
-					'displayCond' => 'EXT:scheduler:LOADED:true',
 					'config' => array(
 							'type' => 'input',
 							'size' => '6',
@@ -185,7 +179,6 @@ $tx_cal_calendar = array(
 			'schedulerId' => array(
 					'exclude' => 0,
 					'label' => 'LLL:EXT:cal/Resources/Private/Language/locallang_db.xml:tx_cal_calendar.schedulerId',
-					'displayCond' => 'EXT:scheduler:LOADED:true',
 					'config' => array(
 							'type' => 'input',
 							'size' => '5',
@@ -282,9 +275,5 @@ $tx_cal_calendar = array(
 		)
 	)
 );
-
-if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded ('scheduler')){
-	$tx_cal_calendar['tx_cal_calendar']['columns']['refresh']['displayCond'] = 'EXT:scheduler:LOADED:true';
-}
 
 return $tx_cal_calendar;

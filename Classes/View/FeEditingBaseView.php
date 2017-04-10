@@ -147,7 +147,7 @@ class FeEditingBaseView extends \TYPO3\CMS\Cal\View\BaseView {
 		foreach ( $linkParams as $key => $value ) {
 			$preLinkParams [$this->prefixId . '[' . $key . ']'] = $value;
 		}
-		$this->controller->pi_linkTP ( '', $preLinkParams, $this->conf ['clear_anyway'], $linkParams ['page_id'] );
+		$this->controller->pi_linkTP ( '', $preLinkParams, $this->conf ['cache'], $linkParams ['page_id'] );
 		$temp_sims ['###BACK_LINK###'] = $this->cObj->lastTypoLinkUrl;
 		$temp_sims ['###L_CANCEL###'] = $this->controller->pi_getLL ( 'l_cancel' );
 		$temp_sims ['###L_SUBMIT###'] = $this->controller->pi_getLL ( 'l_submit' );
@@ -289,7 +289,9 @@ class FeEditingBaseView extends \TYPO3\CMS\Cal\View\BaseView {
 			$all_files = Array ();
 			$all_files ['webspace'] ['allow'] = '*';
 			$all_files ['webspace'] ['deny'] = '';
-			$fileFunc->init ( '', $all_files );
+			if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger (TYPO3_version) < '8000000') {
+			     $fileFunc->init ( '', $all_files );
+			}
 			$allowedExt = array ();
 			$denyExt = array ();
 			if ($marker == 'image') {
@@ -301,7 +303,7 @@ class FeEditingBaseView extends \TYPO3\CMS\Cal\View\BaseView {
 			$i = 0;
 			
 			// new files
-			if (is_array ( $_FILES [$this->prefixId] ['name'] )) {
+			if (is_array ( $_FILES [$this->prefixId] ['name'] [$marker])) {
 				foreach ( $_FILES [$this->prefixId] ['name'] [$marker] as $id => $filename ) {
 					$theDestFile = '';
 					$iConf = $this->conf ['view.'] [$this->conf ['view'] . '.'] [strtolower ( $marker ) . '_stdWrap.'];
@@ -594,21 +596,14 @@ class FeEditingBaseView extends \TYPO3\CMS\Cal\View\BaseView {
 								if (method_exists ( $this->object, $functionB )) {
 									$b = $this->object->$functionB ();
 									if (is_object ( $a ) && method_exists ( $a, $rulePart )) {
-										$result = $a->compareTo ( $b );
-										if ($result != - 1) {
-											$failed = true;
-										}
+										$result = $a->compareTo ( $result );
+										$failed = $result != - 1;
 									} else if (is_numeric ( $a ) && is_numeric ( $b )) {
-										if ($a >= $b) {
-											$failed = true;
-										}
+										$failed = $a >= $b;
 									}
 								}
 							} else if (isset ( $rule ['value'] )) {
-								$b = $rule ['value'];
-								if ($a >= $b) {
-									$failed = true;
-								}
+								$failed = $a >= $rule ['value'];
 							}
 						}
 						break;
@@ -629,20 +624,13 @@ class FeEditingBaseView extends \TYPO3\CMS\Cal\View\BaseView {
 									
 									if (is_object ( $a ) && method_exists ( $a, $rulePart )) {
 										$result = $a->compareTo ( $b );
-										if ($result != 1) {
-											$failed = true;
-										}
+										$failed = $result != 1;
 									} else if (is_numeric ( $a ) && is_numeric ( $b )) {
-										if ($a <= $b) {
-											$failed = true;
-										}
+										$failed = $a <= $b;
 									}
 								}
 							} else if (isset ( $rule ['value'] )) {
-								$b = $rule ['value'];
-								if ($a <= $b) {
-									$failed = true;
-								}
+								$failed = $a <= $rule ['value'];
 							}
 						}
 						break;
@@ -659,23 +647,15 @@ class FeEditingBaseView extends \TYPO3\CMS\Cal\View\BaseView {
 								$functionB = 'get' . ucwords ( $rule ['field'] );
 								if (method_exists ( $this->object, $functionB )) {
 									$b = $this->object->$functionB ();
-									
 									if (is_object ( $a ) && method_exists ( $a, $rulePart )) {
-										$result = $a->compareTo ( $b );
-										if ($result != 0) {
-											$failed = true;
-										}
-									} else if (is_numeric ( $a ) && is_numeric ( $b )) {
-										if ($a != $b) {
-											$failed = true;
-										}
+									    $result = $a->compareTo ( $b );
+										$failed = $result != 0;
+									} else {
+									    $failed = $a != $b;
 									}
 								}
 							} else if (isset ( $rule ['value'] )) {
-								$b = $rule ['value'];
-								if ($a != $b) {
-									$failed = true;
-								}
+								$failed = $a != $rule ['value'];
 							}
 						}
 						break;
@@ -695,20 +675,13 @@ class FeEditingBaseView extends \TYPO3\CMS\Cal\View\BaseView {
 									
 									if (is_object ( $a ) && method_exists ( $a, $rulePart )) {
 										$result = $a->compareTo ( $b );
-										if ($result == 0) {
-											$failed = true;
-										}
+										$failed = $result == 0;
 									} else if (is_numeric ( $a ) && is_numeric ( $b )) {
-										if ($a == $b) {
-											$failed = true;
-										}
+										$failed = $a == $b;
 									}
 								}
 							} else if (is_null ( $rule ['value'] ) || isset ( $rule ['value'] )) {
-								$b = $rule ['value'];
-								if ($a == $b) {
-									$failed = true;
-								}
+								$failed = $a == $rule ['value'];
 							}
 						}
 						break;

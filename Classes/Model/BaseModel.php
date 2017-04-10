@@ -14,6 +14,7 @@ namespace TYPO3\CMS\Cal\Model;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Cal\Utility\Functions;
 
 /**
  *
@@ -368,6 +369,7 @@ abstract class BaseModel extends \TYPO3\CMS\Cal\Model\AbstractModel {
 		
 		$this->initLocalCObject ();
 		$this->local_cObj->setCurrentVal ($description);
+		$this->local_cObj->data['bodytext'] = $description;
 		if ($this->striptags) {
 			$sims ['###DESCRIPTION_STRIPTAGS###'] = strip_tags ($this->local_cObj->cObjGetSingle ($this->conf ['view.'] [$view . '.'] [$this->getObjectType () . '.'] ['description'], $this->conf ['view.'] [$view . '.'] [$this->getObjectType () . '.'] ['description.']));
 		} else {
@@ -620,7 +622,7 @@ abstract class BaseModel extends \TYPO3\CMS\Cal\Model\AbstractModel {
 	public function fillTemplate($subpartMarker) {
 		$cObj = &\TYPO3\CMS\Cal\Utility\Registry::Registry ('basic', 'cobj');
 		
-		$page = $cObj->fileResource ($this->templatePath);
+		$page = Functions::getContent ($this->templatePath);
 		
 		if ($page == '') {
 			return \TYPO3\CMS\Cal\Utility\Functions::createErrorMessage ('No ' . $this->objectType . ' template file found at: >' . $this->templatePath . '<.', 'Please make sure the path is correct and that you included the static template and double-check the path using the Typoscript Object Browser.');

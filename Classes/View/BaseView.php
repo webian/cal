@@ -15,6 +15,7 @@ namespace TYPO3\CMS\Cal\View;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Cal\Model\Pear\Date\Calc;
+use TYPO3\CMS\Cal\Utility\Functions;
 
 /**
  * TODO
@@ -195,11 +196,11 @@ class BaseView extends \TYPO3\CMS\Cal\Service\BaseService {
 		$rems['###CALENDAR_SELECTOR###'] = '';
 		if ($this->conf['view.']['other.']['showCalendarSelection']) {
 			$temp_sims = array();
-			$selectedCalendars = GeneralUtility::trimExplode(',',$this->conf['calendar'],1);
+			$selectedCalendars = explode (',',\TYPO3\CMS\Cal\Controller\Controller::convertLinkVarArrayToList($this->controller->piVars['calendar']));
 			$calendarService = $this->modelObj->getServiceObjByKey('cal_calendar_model', 'calendar', 'tx_cal_calendar');
 			$calendarArray = $calendarService->getCalendarFromTable($this->conf['pidList'], $calendarService->getCalendarSearchString($this->conf['pidList'], true,false));
 			if(is_array($calendarArray)){
-				$calendarOptions .= '<option value="">'.$this->controller->pi_getLL('l_all_cal_comb_lang').'</option>';
+				$calendarOptions .= '<option value="0">'.$this->controller->pi_getLL('l_all_cal_comb_lang').'</option>';
 				foreach($calendarArray as $calendar){
 					if(in_array($calendar->row['uid'],$selectedCalendars)){
 						$calendarOptions .= '<option value="'.$calendar->row['uid'].'" selected="selected">'.$calendar->getTitle().'</option>';
@@ -340,7 +341,6 @@ class BaseView extends \TYPO3\CMS\Cal\Service\BaseService {
 				$this->local_cObj->data['link_additionalParams'] = '&tx_cal_controller[gettime]='.$time.'&tx_cal_controller[getdate]='.$cal_time_obj->format('%Y%m%d').'&tx_cal_controller[lastview]='.$this->controller->extendLastView().'&tx_cal_controller[view]=create_event';
 				$this->local_cObj->data['link_section'] = 'default';
 				$this->local_cObj->data['link_parameter'] = $this->conf['view.']['event.']['createEventViewPid']?$this->conf['view.']['event.']['createEventViewPid']:$GLOBALS['TSFE']->id;
-
 				$tmp .= $this->local_cObj->cObjGetSingle($this->conf['view.'][$view.'.']['event.']['addLink'],$this->conf['view.'][$view.'.']['event.']['addLink.']);
 				if($wrap){
 					$tmp = sprintf($wrap,$remember,$class,$tmp,$cal_time_obj->format('%Y %m %d %H %M %s'));
@@ -711,14 +711,14 @@ class BaseView extends \TYPO3\CMS\Cal\Service\BaseService {
 			foreach ($match[1] as $key => $val) {
 				$offset = $match[2][$i].$match[3][$i];
 				if ($match[1][$i] == 'SMALL') {
-					$template_file = $this->cObj->fileResource($this->conf['view.']['month.']['monthSmallTemplate']);
+					$template_file = Functions::getContent ($this->conf['view.']['month.']['monthSmallTemplate']);
 					$type = 'small';
 				}
 				elseif ($match[1][$i] == 'MEDIUM') {
-					$template_file = $this->cObj->fileResource($this->conf['view.']['month.']['monthMediumTemplate']);
+					$template_file = Functions::getContent ($this->conf['view.']['month.']['monthMediumTemplate']);
 					$type = 'medium';
 				} else {
-					$template_file = $this->cObj->fileResource($this->conf['view.']['month.']['monthLargeTemplate']);
+					$template_file = Functions::getContent ($this->conf['view.']['month.']['monthLargeTemplate']);
 					$type = 'large';
 				}
 				
@@ -741,7 +741,7 @@ class BaseView extends \TYPO3\CMS\Cal\Service\BaseService {
 
 				// This opens up another template and parses it as well.
 				$data = $GLOBALS['TSFE']->tmpl->getFileName($data);
-				$data = (file_exists($data)) ? $this->cObj->fileResource($data) : $data;
+				$data = (file_exists($data)) ? Functions::getContent ($data) : $data;
 				// This removes any unfilled tags
 				if (!$data) {
 					$page = preg_replace('!<\!-- ###'.$tag.'### start -->(.*)<\!-- ###'.$tag.'### end -->!is', '', $data);
@@ -1248,9 +1248,9 @@ class BaseView extends \TYPO3\CMS\Cal\Service\BaseService {
 			}
 		}
 		
-		$page = $this->cObj->fileResource($this->conf['view.']['month.']['new'.ucwords($type).'MonthTemplate']);
+		$page = Functions::getContent ($this->conf['view.']['month.']['new'.ucwords($type).'MonthTemplate']);
 		
-		$monthModel = \TYPO3\CMS\Cal\View\NewMonthView::getMonth($monthDate->month, $monthDate->year);
+		$monthModel = \TYPO3\CMS\Cal\View\NewMonthView::getMonthView($monthDate->month, $monthDate->year);
 		
 		$today = new \TYPO3\CMS\Cal\Model\CalDate();
 		$monthModel->setCurrent($today);
@@ -1258,10 +1258,10 @@ class BaseView extends \TYPO3\CMS\Cal\Service\BaseService {
 		$selected = new \TYPO3\CMS\Cal\Model\CalDate($this->conf['getdate']);
 		$monthModel->setSelected($selected);
 		
-		$monthModel->weekDayFormat = $this->conf['view.'][$this->conf['view'].'.']['weekdayFormat'.ucwords($type).'Month'];
+		$monthModel->setWeekDayFormat($this->conf['view.'][$this->conf['view'].'.']['weekdayFormat'.ucwords($type).'Month']);
 		$weekdayLength = intval($this->conf['view.'][$this->conf['view'].'.']['weekdayLength'.ucwords($type).'Month']);
 		if($weekdayLength > 0){
-			$monthModel->weekDayLength = $weekdayLength;
+			$monthModel->setWeekDayLength($weekdayLength);
 		}
 		
 		$masterArrayKeys = array_keys($this->master_array);
@@ -1675,7 +1675,7 @@ class BaseView extends \TYPO3\CMS\Cal\Service\BaseService {
 		if($this->conf['view.']['month.']['navigation']==0){
 			$page = str_replace('###CALENDAR_NAV###', '', $page);
 		}else{
-			$template = $this->cObj->fileResource($this->conf['view.']['month.']['horizontalSidebarTemplate']);
+			$template = Functions::getContent ($this->conf['view.']['month.']['horizontalSidebarTemplate']);
 			if ($template == '') {
 				$template = '<h3>calendar: no calendar_nav template file found:</h3>'.$this->conf['view.']['month.']['horizontalSidebarTemplate'];
 			}

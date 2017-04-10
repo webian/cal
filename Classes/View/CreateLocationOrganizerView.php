@@ -13,6 +13,8 @@ namespace TYPO3\CMS\Cal\View;
  * The TYPO3 extension Calendar Base (cal) project - inspiring people to share!
  */
 
+use TYPO3\CMS\Cal\Utility\Functions;
+
 /**
  * A service which renders a form to create / edit an event location / organizer.
  *
@@ -68,7 +70,7 @@ class CreateLocationOrganizerView extends \TYPO3\CMS\Cal\View\FeEditingBaseView 
 		$this->serviceName = 'cal_' . $this->objectString . '_model';
 		$this->table = 'tx_cal_' . $this->objectString;
 		
-		$page = $this->cObj->fileResource ($this->conf ['view.'] ['create_location.'] ['template']);
+		$page = Functions::getContent ($this->conf ['view.'] ['create_location.'] ['template']);
 		if ($page == '') {
 			return '<h3>calendar: no create location template file found:</h3>' . $this->conf ['view.'] ['create_location.'] ['template'];
 		}
@@ -123,7 +125,7 @@ class CreateLocationOrganizerView extends \TYPO3\CMS\Cal\View\FeEditingBaseView 
 		$sims ['###COUNTRY###'] = '';
 		if ($this->isAllowed ('country')) {
 			if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded ('static_info_tables')) {
-				$staticInfo = \TYPO3\CMS\Cal\Utility\Functions::makeInstance('tx_staticinfotables_pi1');
+				$staticInfo = \TYPO3\CMS\Cal\Utility\Functions::makeInstance('SJBR\\StaticInfoTables\\PiBaseApi');
 				$staticInfo->init ();
 				$sims ['###COUNTRY###'] = $this->applyStdWrap ($staticInfo->buildStaticInfoSelector ('COUNTRIES', 'tx_cal_controller[country]', '', $this->object->getCountry ()), 'country_static_info_stdWrap');
 			} else {
@@ -138,7 +140,7 @@ class CreateLocationOrganizerView extends \TYPO3\CMS\Cal\View\FeEditingBaseView 
 		$sims ['###COUNTRYZONE###'] = '';
 		if ($this->isAllowed ('countryzone')) {
 			if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded ('static_info_tables')) {
-				$staticInfo = \TYPO3\CMS\Cal\Utility\Functions::makeInstance('tx_staticinfotables_pi1');
+				$staticInfo = \TYPO3\CMS\Cal\Utility\Functions::makeInstance('SJBR\\StaticInfoTables\\PiBaseApi');
 				$staticInfo->init ();
 				$sims ['###COUNTRYZONE###'] = $this->applyStdWrap ($staticInfo->buildStaticInfoSelector ('SUBDIVISIONS', 'tx_cal_controller[countryzone]', '', $this->object->getCountryZone (), $this->object->getCountry ()), 'countryzone_static_info_stdWrap');
 			} else {

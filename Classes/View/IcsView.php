@@ -13,6 +13,8 @@ namespace TYPO3\CMS\Cal\View;
  * The TYPO3 extension Calendar Base (cal) project - inspiring people to share!
  */
 
+use TYPO3\CMS\Cal\Utility\Functions;
+
 /**
  * A concrete view for the calendar.
  * It is based on the phpicalendar project
@@ -29,7 +31,7 @@ class IcsView extends \TYPO3\CMS\Cal\View\BaseView {
 	
 	public function drawIcsList(&$master_array, $getdate) {
 		$this->_init ($master_array);
-		$page = $this->cObj->fileResource ($this->conf ['view.'] ['ics.'] ['icsListTemplate']);
+		$page = Functions::getContent ($this->conf ['view.'] ['ics.'] ['icsListTemplate']);
 		if ($page == '') {
 			// return '<h3>calendar: no icsListTemplate file found:</h3>'.$this->conf['view.']['ics.']['icsListTemplate'];
 			// falling back to default:
@@ -152,9 +154,11 @@ END:VCALENDAR
 									$start = new  \TYPO3\CMS\Cal\Model\CalDate (substr ($deviationRow ['start_datetime'], 0, 8));
 									$start->setHour (substr ($deviationRow ['start_datetime'], 8, 2));
 									$start->setMinute (substr ($deviationRow ['start_datetime'], 10, 2));
+									$start->setTZbyId ('UTC');
 									$end = new  \TYPO3\CMS\Cal\Model\CalDate (substr ($deviationRow ['end_datetime'], 0, 8));
 									$end->setHour (substr ($deviationRow ['end_datetime'], 8, 2));
 									$end->setMinute (substr ($deviationRow ['end_datetime'], 10, 2));
+									$end->setTZbyId ('UTC');
 									unset ($deviationRow ['start_datetime']);
 									unset ($deviationRow ['end_datetime']);
 									$new_event = new \TYPO3\CMS\Cal\Model\EventRecDeviationModel($event, $deviationRow, $start, $end);

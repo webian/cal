@@ -13,6 +13,8 @@ namespace TYPO3\CMS\Cal\View;
  * The TYPO3 extension Calendar Base (cal) project - inspiring people to share!
  */
 
+use TYPO3\CMS\Cal\Utility\Functions;
+
 /**
  * A concrete view for the calendar.
  * It is based on the phpicalendar project
@@ -42,9 +44,9 @@ class ListView extends \TYPO3\CMS\Cal\View\BaseView {
 		if ($page == '') {
 			$confArr = unserialize ($GLOBALS ['TYPO3_CONF_VARS'] ['EXT'] ['extConf'] ['cal']);
 			if ($confArr ['useTeaser']) {
-				$page = $this->cObj->fileResource ($this->conf ['view.'] ['list.'] ['listWithTeaserTemplate']);
+				$page = Functions::getContent ($this->conf ['view.'] ['list.'] ['listWithTeaserTemplate']);
 			} else {
-				$page = $this->cObj->fileResource ($this->conf ['view.'] ['list.'] ['listTemplate']);
+				$page = Functions::getContent ($this->conf ['view.'] ['list.'] ['listTemplate']);
 			}
 			if ($page == '') {
 				$this->error = true;
@@ -63,9 +65,9 @@ class ListView extends \TYPO3\CMS\Cal\View\BaseView {
 		if ($listTemplate == '') {
 			$confArr = unserialize ($GLOBALS ['TYPO3_CONF_VARS'] ['EXT'] ['extConf'] ['cal']);
 			if ($confArr ['useTeaser']) {
-				$page = $this->cObj->fileResource ($this->conf ['view.'] ['list.'] ['listWithTeaserTemplate']);
+				$page = Functions::getContent ($this->conf ['view.'] ['list.'] ['listWithTeaserTemplate']);
 			} else {
-				$page = $this->cObj->fileResource ($this->conf ['view.'] ['list.'] ['listTemplate']);
+				$page = Functions::getContent ($this->conf ['view.'] ['list.'] ['listTemplate']);
 			}
 			if ($page == '') {
 				$this->error = true;
@@ -811,7 +813,10 @@ class ListView extends \TYPO3\CMS\Cal\View\BaseView {
 				$pagesTotal = intval ($this->recordsPerPage) == 0 ? 1 : ceil ($this->count / $this->recordsPerPage);
 				$nextPage = $this->offset + 1;
 				$previousPage = $this->offset - 1;
-				$pagesCount = $this->conf ['view.'] ['list.'] ['pageBrowser.'] ['pagesCount'] - 1;
+				$pagesCount = intval($this->conf ['view.'] ['list.'] ['pageBrowser.'] ['pagesCount']) - 1;
+				if ($pagesCount < 0) {
+				    $pagesCount = 0;
+				}
 				
 				$min = 1;
 				$max = $pagesTotal;

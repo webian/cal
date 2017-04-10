@@ -14,6 +14,7 @@ namespace TYPO3\CMS\Cal\Model;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Cal\Utility\Functions;
 
 /**
  * A concrete model for the calendar.
@@ -102,57 +103,65 @@ class EventModel extends \TYPO3\CMS\Cal\Model\Model {
 					break;
 				case 'start_date' :
 				case 'start_time' :
-					$start = new \TYPO3\CMS\Cal\Model\CalDate ($piVars ['start_date'] . '000000');
-					$start->addSeconds ($piVars ['start_time']);
-					$this->setStart ($start);
+				    if (!$startDateIsSet) {
+    					$start = new \TYPO3\CMS\Cal\Model\CalDate ($piVars ['start_date'] . '000000');
+    					$start->addSeconds ($piVars ['start_time']);
+    					$this->setStart ($start);
+				    }
 					unset ($piVars ['start_date']);
 					unset ($piVars ['start_time']);
 					break;
 				case 'startdate' :
 				case 'starttime' :
 				case 'startminutes' :
-					$start = new \TYPO3\CMS\Cal\Model\CalDate (\TYPO3\CMS\Cal\Utility\Functions::getYmdFromDateString ($this->conf, strip_tags ($piVars ['startdate'] ? $piVars ['startdate'] : $piVars ['getdate'])) . '000000');
-					if (strlen ($piVars ['starttime']) == 4) {
-						$tempArray = Array ();
-						preg_match ('/([0-9]{2})([0-9]{2})/', $piVars ['starttime'], $tempArray);
-						$start->setHour (intval ($tempArray [1]));
-						$start->setMinute (intval ($tempArray [2]));
-					} else {
-						$start->setHour (intval ($piVars ['starttime']));
-						$start->setMinute (intval ($piVars ['startminutes']));
-					}
-					$start->setSecond (0);
-					$start->setTZbyId ('UTC');
-					$this->setStart ($start);
+				    if (!$startDateIsSet) {
+    					$start = new \TYPO3\CMS\Cal\Model\CalDate (\TYPO3\CMS\Cal\Utility\Functions::getYmdFromDateString ($this->conf, strip_tags ($piVars ['startdate'] ? $piVars ['startdate'] : $piVars ['getdate'])) . '000000');
+    					if (strlen ($piVars ['starttime']) == 4) {
+    						$tempArray = Array ();
+    						preg_match ('/([0-9]{2})([0-9]{2})/', $piVars ['starttime'], $tempArray);
+    						$start->setHour (intval ($tempArray [1]));
+    						$start->setMinute (intval ($tempArray [2]));
+    					} else {
+    						$start->setHour (intval ($piVars ['starttime']));
+    						$start->setMinute (intval ($piVars ['startminutes']));
+    					}
+    					$start->setSecond (0);
+    					$start->setTZbyId ('UTC');
+    					$this->setStart ($start);
+    					$startDateIsSet = true;
+				    }
 					unset ($piVars ['startdate']);
 					unset ($piVars ['starttime']);
 					unset ($piVars ['startminutes']);
-					$startDateIsSet = true;
 					break;
 				case 'end_date' :
 				case 'end_time' :
-					$end = new \TYPO3\CMS\Cal\Model\CalDate ($piVars ['end_date'] . '000000');
-					$end->addSeconds ($piVars ['end_time']);
-					$this->setEnd ($end);
+				    if (!$endDateIsSet) {
+    					$end = new \TYPO3\CMS\Cal\Model\CalDate ($piVars ['end_date'] . '000000');
+    					$end->addSeconds ($piVars ['end_time']);
+    					$this->setEnd ($end);
+				    }
 					unset ($piVars ['end_date']);
 					unset ($piVars ['end_time']);
 					break;
 				case 'enddate' :
 				case 'endtime' :
 				case 'endminutes' :
-					$end = new \TYPO3\CMS\Cal\Model\CalDate (\TYPO3\CMS\Cal\Utility\Functions::getYmdFromDateString ($this->conf, strip_tags ($piVars ['enddate'] ? $piVars ['enddate'] : $piVars ['getdate'])) . '000000');
-					if (strlen ($piVars ['endtime']) == 4) {
-						$tempArray = Array ();
-						preg_match ('/([0-9]{2})([0-9]{2})/', $piVars ['endtime'], $tempArray);
-						$end->setHour (intval ($tempArray [1]));
-						$end->setMinute (intval ($tempArray [2]));
-					} else {
-						$end->setHour (intval ($piVars ['endtime']));
-						$end->setMinute (intval ($piVars ['endminutes']));
-					}
-					$end->setSecond (0);
-					$end->setTzById ('UTC');
-					$this->setEnd ($end);
+				    if (!$endDateIsSet) {
+    					$end = new \TYPO3\CMS\Cal\Model\CalDate (\TYPO3\CMS\Cal\Utility\Functions::getYmdFromDateString ($this->conf, strip_tags ($piVars ['enddate'] ? $piVars ['enddate'] : $piVars ['getdate'])) . '000000');
+    					if (strlen ($piVars ['endtime']) == 4) {
+    						$tempArray = Array ();
+    						preg_match ('/([0-9]{2})([0-9]{2})/', $piVars ['endtime'], $tempArray);
+    						$end->setHour (intval ($tempArray [1]));
+    						$end->setMinute (intval ($tempArray [2]));
+    					} else {
+    						$end->setHour (intval ($piVars ['endtime']));
+    						$end->setMinute (intval ($piVars ['endminutes']));
+    					}
+    					$end->setSecond (0);
+    					$end->setTzById ('UTC');
+    					$this->setEnd ($end);
+				    }
 					unset ($piVars ['enddate']);
 					unset ($piVars ['endtime']);
 					unset ($piVars ['endminutes']);
@@ -812,7 +821,7 @@ class EventModel extends \TYPO3\CMS\Cal\Model\Model {
 		
 		$templatePath = $this->conf ['view.'] ['event.'] ['eventModelTemplate'];
 		
-		$page = $cObj->fileResource ($templatePath);
+		$page = Functions::getContent($templatePath);
 		
 		if ($page == '') {
 			return '<h3>calendar: no event model template file found:</h3>' . $templatePath;
@@ -910,7 +919,7 @@ class EventModel extends \TYPO3\CMS\Cal\Model\Model {
 									
 									$mailer->getHeaders ()->addTextHeader ('Organization: ', $this->conf ['view.'] ['event.'] ['notify.'] ['organisation']);
 									
-									$local_template = $cObj->fileResource ($this->conf ['view.'] ['event.'] ['notify.'] ['confirmTemplate']);
+									$local_template = Functions::getContent ($this->conf ['view.'] ['event.'] ['notify.'] ['confirmTemplate']);
 									
 									$htmlTemplate = $cObj->getSubpart ($local_template, '###HTML###');
 									$plainTemplate = $cObj->getSubpart ($local_template, '###PLAIN###');
@@ -995,7 +1004,7 @@ class EventModel extends \TYPO3\CMS\Cal\Model\Model {
 									));
 									$mailer->getHeaders ()->addTextHeader ('Organization: ', $this->conf ['view.'] ['event.'] ['notify.'] ['organisation']);
 									
-									$local_template = $cObj->fileResource ($this->conf ['view.'] ['event.'] ['notify.'] ['unsubscribeConfirmTemplate']);
+									$local_template = Functions::getContent ($this->conf ['view.'] ['event.'] ['notify.'] ['unsubscribeConfirmTemplate']);
 									
 									$htmlTemplate = $cObj->getSubpart ($local_template, '###HTML###');
 									$plainTemplate = $cObj->getSubpart ($local_template, '###PLAIN###');
@@ -1711,7 +1720,8 @@ class EventModel extends \TYPO3\CMS\Cal\Model\Model {
 		if ($this->row ['icsUid'] != '') {
 			$sims ['###GUID###'] = $this->row ['icsUid'];
 		} else {
-			$sims ['###GUID###'] = $this->conf ['view.'] ['ics.'] ['eventUidPrefix'] . '_' . $this->getCalendarUid () . '_' . $this->getUid ();
+			$eventArray = array('calendar_id' => $this->getCalendarUid (), 'uid' => $this->getUid ());
+			$sims ['###GUID###'] = \TYPO3\CMS\Cal\Utility\Functions::getIcsUid($this->conf, $eventArray);
 		}
 	}
 	function getDtstampMarker(& $template, & $sims, & $rems, & $wrapped, $view) {

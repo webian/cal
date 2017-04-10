@@ -14,6 +14,7 @@ namespace TYPO3\CMS\Cal\View;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Cal\Utility\Functions;
 
 /**
  * A service which renders a form to create / edit a phpicalendar event.
@@ -123,13 +124,13 @@ class CreateEventView extends \TYPO3\CMS\Cal\View\FeEditingBaseView {
 		$page = '';
 		if ($this->conf ['view.'] ['enableAjax'] && $this->controller->piVars ['pid']) {
 			$path = $this->conf ['view.'] ['create_event.'] ['ajaxTemplate'];
-			$page = $this->cObj->fileResource ($path);
+			$page = Functions::getContent ($path);
 			$this->conf ['noWrapInBaseClass'] = 1;
 			header ("Content-Type: application/xml");
 			header ("Accept-Charset: UTF-8");
 		} else {
 			$path = $this->conf ['view.'] ['create_event.'] ['template'];
-			$page = $this->cObj->fileResource ($path);
+			$page = Functions::getContent ($path);
 		}
 		
 		if ($page == '') {
@@ -480,7 +481,7 @@ class CreateEventView extends \TYPO3\CMS\Cal\View\FeEditingBaseView {
 			if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded ('tinymce_rte')) {
 				require_once (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath ('tinymce_rte') . 'pi1/class.tx_tinymce_rte_pi1.php'); // alternative RTE
 			}
-			if (! $this->RTEObj && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded ('rtehtmlarea')) {
+			if (! $this->RTEObj && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded ('rtehtmlarea') && class_exists('\TYPO3\CMS\Rtehtmlarea\Controller\FrontendRteController')) {
 				$this->RTEObj = new \TYPO3\CMS\Rtehtmlarea\Controller\FrontendRteController();
 			} else if (! $this->RTEObj && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded ('tinymce_rte')) {
 				$this->RTEObj = \TYPO3\CMS\Cal\Utility\Functions::makeInstance('tx_tinymce_rte_pi1'); // load alternative RTE
@@ -721,7 +722,7 @@ class CreateEventView extends \TYPO3\CMS\Cal\View\FeEditingBaseView {
 			$sims ['###EXCEPTION###'] = $this->cObj->stdWrap ($exception, $this->conf ['view.'] [$this->conf ['view'] . '.'] ['exception_stdWrap.']);
 		}
 	}
-	function getFormStartMarker(& $template, & $sims, & $rems) {
+	function getFormStartMarker(& $template, & $sims, & $rems, & $wrapped) {
 		$temp = $this->cObj->getSubpart ($template, '###FORM_START###');
 		$temp_sims = Array ();
 		

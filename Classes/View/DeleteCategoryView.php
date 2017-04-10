@@ -13,6 +13,8 @@ namespace TYPO3\CMS\Cal\View;
  * The TYPO3 extension Calendar Base (cal) project - inspiring people to share!
  */
 
+use TYPO3\CMS\Cal\Utility\Functions;
+
 /**
  * A service which renders a form to create / edit a phpicategory event.
  *
@@ -40,7 +42,7 @@ class DeleteCategoryView extends \TYPO3\CMS\Cal\View\FeEditingBaseView {
 	 * @return string HTML output.
 	 */
 	public function drawDeleteCategory(&$category) {
-		$page = $this->cObj->fileResource ($this->conf ['view.'] ['delete_category.'] ['template']);
+		$page = Functions::getContent ($this->conf ['view.'] ['delete_category.'] ['template']);
 		if ($page == '') {
 			return '<h3>category: no delete category template file found:</h3>' . $this->conf ['view.'] ['delete_category.'] ['template'];
 		}
@@ -72,7 +74,7 @@ class DeleteCategoryView extends \TYPO3\CMS\Cal\View\FeEditingBaseView {
 		return \TYPO3\CMS\Cal\Utility\Functions::substituteMarkerArrayNotCached ($page, $sims, Array (), Array ());
 	}
 	
-	public function getFormStartMarker(& $template, & $sims, & $rems) {
+	public function getFormStartMarker(& $template, & $sims, & $rems, & $wrapped) {
 		$rems ['###FORM_START###'] = $this->cObj->getSubpart ($template, '###FORM_START###');
 	}
 	

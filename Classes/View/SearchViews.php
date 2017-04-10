@@ -13,6 +13,8 @@ namespace TYPO3\CMS\Cal\View;
  * The TYPO3 extension Calendar Base (cal) project - inspiring people to share!
  */
 
+use TYPO3\CMS\Cal\Utility\Functions;
+
 /**
  * A concrete view for the calendar.
  * It is based on the phpicalendar project
@@ -27,6 +29,7 @@ class SearchViews extends \TYPO3\CMS\Cal\View\ListView {
 	
 	public function __construct() {
 		parent::__construct();
+		$this->confArr = unserialize ( $GLOBALS ['TYPO3_CONF_VARS'] ['EXT'] ['extConf'] ['cal'] );
 	}
 	
 	/**
@@ -39,7 +42,7 @@ class SearchViews extends \TYPO3\CMS\Cal\View\ListView {
 	public function drawSearch(&$master_array, $getdate) {
 		$this->_init ($master_array);
 		
-		$page = $this->cObj->fileResource ($this->conf ['view.'] ['other.'] ['searchBoxTemplate']);
+		$page = Functions::getContent ($this->conf ['view.'] ['other.'] ['searchBoxTemplate']);
 		if ($page == '') {
 			return '<h3>calendar: no template file found:</h3>' . $this->conf ['view.'] ['other.'] ['searchBoxTemplate'];
 		}
@@ -55,7 +58,7 @@ class SearchViews extends \TYPO3\CMS\Cal\View\ListView {
 	 * @return string HTML output.
 	 */
 	public function drawSearchAllResult(&$master_array, $starttime, $endtime, $searchword, $locationIds = '', $organizerIds = '') {
-		$page = $this->cObj->fileResource ($this->conf ['view.'] ['search.'] ['searchResultAllTemplate']);
+		$page = Functions::getContent ($this->conf ['view.'] ['search.'] ['searchResultAllTemplate']);
 		if ($page == '') {
 			return '<h3>calendar: no search result template file found:</h3>' . $this->conf ['view.'] ['search.'] ['searchResultAllTemplate'];
 		}
@@ -92,15 +95,15 @@ class SearchViews extends \TYPO3\CMS\Cal\View\ListView {
 		return $this->finish ($page, $rems);
 	}
 	
-	public function getSearchActionUrlMarker(&$page, &$sims, &$rems, $view) {
+	public function getSearchActionUrlMarker(&$page, &$sims, &$rems, &$wrapped) {
 		$this->initLocalCObject ();
 		$this->controller->getParametersForTyposcriptLink ($this->local_cObj->data, Array (), $this->conf ['cache'], true);
 		$sims ['###SEARCH_ACTION_URL###'] = $this->local_cObj->cObjGetSingle ($this->conf ['view.'] ['search.'] ['searchLinkUrl'], $this->conf ['view.'] ['search.'] ['searchLinkUrl.']);
 	}
 	
 	public function getCategoryIdsMarker(&$page, &$sims, &$rems, $view) {
-		$sims ['###CATEGORY_IDS###'] = '<option value="">' . $this->controller->pi_getLL ('l_all') . '</option>';
-		$catArrayArray = $this->modelObj->findAllCategories ('cal_category_model', 'tx_cal_category', $this->conf ['pidList']);
+		$sims ['###CATEGORY_IDS###'] = '<option value="">' . $this->controller->pi_getLL ('l_all_category') . '</option>';
+		$catArrayArray = $this->modelObj->findAllCategories ('cal_category_model', $this->confArr ['categoryService'], $this->conf ['pidList']);
 		
 		$rememberUid = Array ();
 		$ids = Array ();
@@ -124,7 +127,7 @@ class SearchViews extends \TYPO3\CMS\Cal\View\ListView {
 	}
 	
 	public function getLocationIdsMarker(&$page, &$sims, &$rems, $view) {
-		$sims ['###LOCATION_IDS###'] = '<option  value="">' . $this->controller->pi_getLL ('l_all') . '</option>';
+		$sims ['###LOCATION_IDS###'] = '<option  value="">' . $this->controller->pi_getLL ('l_all_location') . '</option>';
 		$locationArray = $this->modelObj->findAllLocations ($this->extConf ['useLocationStructure'] ? $this->extConf ['useLocationStructure'] : 'tx_cal_location', $this->conf ['pidList']);
 		
 		$locationIdArray = Array ();
@@ -144,7 +147,7 @@ class SearchViews extends \TYPO3\CMS\Cal\View\ListView {
 	}
 	
 	public function getOrganizerIdsMarker(&$page, &$sims, &$rems, $view) {
-		$sims ['###ORGANIZER_IDS###'] = '<option  value="">' . $this->controller->pi_getLL ('l_all') . '</option>';
+		$sims ['###ORGANIZER_IDS###'] = '<option  value="">' . $this->controller->pi_getLL ('l_all_organizer') . '</option>';
 		$organizerArray = $this->modelObj->findAllOrganizer ($this->extConf ['useOrganizerStructure'] ? $this->extConf ['useOrganizerStructure'] : 'tx_cal_organizer', $this->conf ['pidList']);
 		
 		$organizerIdArray = Array ();
@@ -248,7 +251,7 @@ class SearchViews extends \TYPO3\CMS\Cal\View\ListView {
 	
 	public function initTemplate(&$page) {
 		if ($page == '') {
-			$page = $this->cObj->fileResource ($this->conf ['view.'] ['search.'] ['searchResult' . ucwords ($this->objectType) . 'Template']);
+			$page = Functions::getContent ($this->conf ['view.'] ['search.'] ['searchResult' . ucwords ($this->objectType) . 'Template']);
 			if ($page == '') {
 				$this->error = true;
 				$this->errorMessage = 'No search ' . $this->objectType . ' result template file found for "view.search.searchResult' . ucwords ($this->objectType) . 'Template" at >' . $this->conf ['view.'] ['search.'] ['searchResult' . ucwords ($this->objectType) . 'Template'] . '<';
@@ -263,7 +266,7 @@ class SearchViews extends \TYPO3\CMS\Cal\View\ListView {
 		$this->page = $page;
 	}
 	
-	public function getListSubpart(&$page) {
+	public function getListSubpart($page) {
 		$listTemplate = $this->cObj->getSubpart ($page, '###LIST_TEMPLATE###');
 		if ($listTemplate == '') {
 			$this->error = true;
@@ -423,7 +426,7 @@ class SearchViews extends \TYPO3\CMS\Cal\View\ListView {
 		return $middle;
 	}
 	
-	public function walkThroughMasterArray(&$master_array, &$reverse, &$firstEventDate) {
+	public function walkThroughMasterArray(&$master_array, $reverse, &$firstEventDate) {
 		if ($this->objectType == 'event') {
 			return parent::walkThroughMasterArray ($master_array, $reverse, $firstEventDate);
 		}
@@ -438,7 +441,7 @@ class SearchViews extends \TYPO3\CMS\Cal\View\ListView {
 		}
 	}
 	
-	public function processObject(&$object, $id, &$firstEventDate) {
+	public function processObject(&$object, &$id, &$firstEventDate) {
 		if ($this->objectType == 'event') {
 			return parent::processObject ($object, $id, $firstEventDate);
 		}
