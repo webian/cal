@@ -1002,6 +1002,21 @@ plugin.tx\_cal\_controller.view.event.event
 .. container:: table-row
 
    a
+         categoryIconDefault
+   
+   b
+         String
+   
+   c
+         Default category 'icon' used to visualize event category
+   
+   d
+         &bull;
+
+
+.. container:: table-row
+
+   a
          additionalCategoryWhere
    
    b
@@ -2842,37 +2857,6 @@ plugin.tx\_cal\_controller.view.location.location
    
    Default
          300
-
-
-.. container:: table-row
-
-   Property
-         map.controlSize
-   
-   Data type
-         String
-   
-   Description
-         Possible control sizes for the map. Options are large, small,
-         zoomonly, and none.
-   
-   Default
-         small
-
-
-.. container:: table-row
-
-   Property
-         map.showOverviewMap
-   
-   Data type
-         Boolean
-   
-   Description
-         Defines whether the overview map should be shown.
-   
-   Default
-         0
 
 
 .. container:: table-row

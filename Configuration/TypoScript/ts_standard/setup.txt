@@ -42,11 +42,11 @@ plugin.tx_cal_controller {
 	
 	dateConfig {
 		# @description	Position of the day in a date string (0/1/2). Example: 2007-07-30 -> 2
-		dayPosition = 0
+		dayPosition = 2
 		# @description	Position of the month in a date string (0/1/2). Example: 2007-07-30 -> 1
 		monthPosition = 1
 		# @description	Position of the year in a date string (0/1/2). Example: 2007-07-30 -> 0
-		yearPosition = 2
+		yearPosition = 0
 		# @description	The character, which splits the day, month and year in a date string
 		splitSymbol = -
 		# @description Number of characters that should be used for monthname abbreviations
@@ -72,6 +72,9 @@ plugin.tx_cal_controller {
 	
 	# @description boolean that activates the rendering of the fluid list template
 	activateFluid = 0 
+	
+	# @description string path to the root for partial templates
+	fluidPartialsPath = EXT:cal/Resources/Private/Templates/v2/Partials
 	
 	view {
 		# @description	Allowed calendar views. First one in the list is the default view.  
@@ -286,6 +289,9 @@ plugin.tx_cal_controller {
 
 				# @description Image tag for category icon
 				categoryIcon = <img src="%%%CATICON%%%" border="0" height="24" title="%%%CATTITLE%%%"/>
+				
+				# @description Default category 'icon'
+				categoryIconDefault = &bull;
 
 				
 				# @description	Configuration for the add event link. Default setting is to act backwards compatible, but it can be altered with TS
@@ -943,12 +949,6 @@ plugin.tx_cal_controller {
 		
 					# @description	Height of the map.
 					mapHeight = 300
-		
-					# @description	Possible control sizes for the map.  Options are large, small, zoomonly, and none.
-					controlSize = small
-		
-					# @description	Boolean defining whether overview map should be shown.
-					showOverviewMap = 0
 		
 					# @description	Boolean defining whether the map type control should be shown.
 					showMapType = 0
@@ -2236,7 +2236,15 @@ plugin.tx_cal_controller {
 			heading {
 				1 = TEXT
 				1 {
-					data = LLL:EXT:cal/Resources/Private/Language/locallang.xml:list_title
+					data = register:cal_list_starttime
+					strftime = {$plugin.tx_cal_controller.view.dateFormat}
+				}
+				2 = TEXT
+				2 {
+					data = register:cal_list_endtime
+					wrap = &nbsp;-&nbsp;|
+					required = 1
+					strftime = {$plugin.tx_cal_controller.view.dateFormat}
 				}
 			}
 

@@ -282,11 +282,10 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('wec_map')){
 	);
 	$tx_cal_location['columns']['tx_wecmap_geocode'] = array(
 		'exclude' => 1,
-		'label' => 'LLL:EXT:wec_map/locallang_db.xml:berecord_geocodelabel',
+		'label' => 'LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xml:berecord_geocodelabel',
 		'config' => array(
-			'type' => 'passthrough',
-			'form_type' => 'user',
-			'userFunc' => 'tx_wecmap_backend->checkGeocodeStatus'
+			'type' => 'user',
+			'userFunc' => 'JBartels\\WecMap\\Utility\\Backend->checkGeocodeStatus'
 		)
 	);
 	$tx_cal_location['interface']['showRecordFieldList'] .= ', tx_wecmap_geocode';
@@ -294,11 +293,10 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('wec_map')){
 	
 	$tx_cal_location['columns']['tx_wecmap_map'] = array(
 		'exclude' => 1,
-		'label' => 'LLL:EXT:wec_map/locallang_db.xml:berecord_maplabel',
+		'label' => 'LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xml:berecord_maplabel',
 		'config' => array(
-			'type' => 'passthrough',
-			'form_type' => 'user',
-			'userFunc' => 'tx_wecmap_backend->drawMap'
+			'type' => 'user',
+			'userFunc' => 'JBartels\\WecMap\\Utility\\Backend->drawMap'
 		)
 	);
 	$tx_cal_location['interface']['showRecordFieldList'] .= ', tx_wecmap_map';
@@ -360,6 +358,12 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_ta
     		)
 	     )
 	);
+	if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger (TYPO3_version) >= 7006000) {
+	    $tx_cal_location['columns']['country_zone']['config']['itemsProcFunc'] = 'SJBR\\StaticInfoTables\\Hook\\Backend\\Form\\FormDataProvider\\TcaSelectItemsProcessor->translateCountryZonesSelector';
+	    $tx_cal_location['columns']['country_zone']['config']['wizards']['suggest']['default']['receiverClass'] = 'SJBR\\StaticInfoTables\\Hook\\Backend\\Form\\Wizard\\SuggestReceiver';
+	    $tx_cal_location['columns']['country']['config']['itemsProcFunc'] = 'SJBR\\StaticInfoTables\\Hook\\Backend\\Form\\FormDataProvider\\TcaSelectItemsProcessor->translateCountriesSelector';
+	    $tx_cal_location['columns']['country']['config']['wizards']['suggest']['default']['receiverClass'] = 'SJBR\\StaticInfoTables\\Hook\\Backend\\Form\\Wizard\\SuggestReceiver';
+	}
 }
 
 if (\TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger (TYPO3_version) < 7000000) {
