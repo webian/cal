@@ -17,9 +17,6 @@ $extPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath ( $_EXTKE
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages ( 'tx_cal_fe_user_event_monitor_mm' );
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages ( 'tx_cal_event_deviation' );
 
-// Add Calendar Events to the "Insert Records" content element
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToInsertRecords ( 'tx_cal_event' );
-
 // initalize 'context sensitive help' (csh)
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr ( 'tx_cal_event', 'EXT:cal/Resources/Private/Help/locallang_csh_txcalevent.php' );
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr ( 'tx_cal_calendar', 'EXT:cal/Resources/Private/Help/locallang_csh_txcalcal.php' );

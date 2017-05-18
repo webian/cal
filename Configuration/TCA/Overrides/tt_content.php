@@ -36,3 +36,5 @@ if($extConf ['categoryService'] == 'sys_category') {
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile ($_EXTKEY, 'Configuration/TypoScript/ics/', 'ICS Export');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile ($_EXTKEY, 'Configuration/TypoScript/fe-editing/', 'Fe-Editing');
 
+// Add Calendar Events to the "Insert Records" content element
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToInsertRecords ( 'tx_cal_event' );
